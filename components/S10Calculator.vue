@@ -227,14 +227,18 @@ export default {
     getCostPerAcreForSulfur() {
       if (this.currentBlend) {
         if (this.currentBlend.name == "DAP") {
-          return this.getTotalCostForDap + this.getTotalCostForAmsForDap + 0; // +W18
+          return (
+            this.getTotalCostForDap +
+            this.getTotalCostForAmsForDap +
+            this.getTotalCostForTiger90ForMapOrDap
+          );
         } else if (this.currentBlend.name == "MAP") {
           return (
             this.getTotalCostForMap +
             this.getTotalCostForUreaForMap +
             this.getTotalCostForAmsForMap +
-            0
-          ); //+W19
+            this.getTotalCostForTiger90ForMapOrDap
+          );
         }
       }
 
@@ -330,6 +334,12 @@ export default {
     getPoundsPerAcreAppliedForUreaForMap() {
       return this.getNitrogenFromUreaForMap / this.getUrea.nitrogen;
     },
+    getPoundsPerAcreAppliedForTiger90ForMapOrDap() {
+      return (
+        this.getElementalSulfurFromTiger90ForMapOrDap /
+        this.getElementalSulfur.elementalSulfur
+      );
+    },
     getSulfateFromAmsForMapOrDap() {
       if (!this.includeSulfurInBlend) {
         return 0;
@@ -394,6 +404,46 @@ export default {
       return (
         (this.getPoundsPerAcreAppliedForAmsForMap / 2000) * this.amsPricePerTon
       );
+    },
+    getTotalCostForTiger90ForMapOrDap() {
+      return (
+        (this.getPoundsPerAcreAppliedForTiger90ForMapOrDap / 2000) *
+        this.esPricePerTon
+      );
+    },
+    getTotalSulfateSulfurForMicroEssentials() {
+      return (
+        this.getPoundsPerAcreAppliedForMicroEssentials *
+        this.getMicroEssentials.sulfate
+      );
+    },
+    getTotalElementalSulfureForMicroEssentials() {
+      return (
+        this.getPoundsPerAcreAppliedForMicroEssentials *
+        this.getMicroEssentials.elementalSulfur
+      );
+    },
+    getElementalSulfurFromTiger90ForMapOrDap() {
+      if (!this.includeSulfurInBlend) {
+        return 0;
+      } else {
+        if (this.sulfur) {
+          if (this.sulfur.name == "AMS") {
+            return 0;
+          } else if (this.sulfur.name == "Elemental Sulfur 90%") {
+            return (
+              this.getTotalSulfateSulfurForMicroEssentials +
+              this.getTotalElementalSulfureForMicroEssentials
+            );
+          } else if (this.sulfur.name == "AMS + ES 50/50") {
+            return this.getTotalElementalSulfureForMicroEssentials;
+          } else {
+            return 0;
+          }
+        }
+
+        return 0;
+      }
     }
   }
 };
