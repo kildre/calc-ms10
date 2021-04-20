@@ -17,4 +17,7 @@ $ yarn start
 $ yarn generate
 ```
 
+## Heroku URL
+https://mosaic-me-s10-value-calculator.herokuapp.com/
+
 For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
