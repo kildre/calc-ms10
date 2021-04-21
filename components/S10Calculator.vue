@@ -1,151 +1,171 @@
 <template>
-  <div class="main row">
-    <div class="col-sm-6 left-col">
-      <b-form>
-        <b-card bg-variant="light">
-          <b-form-group label="Crop Price">
-            <b-input-group prepend="$">
-              <b-form-input
-                type="number"
-                v-model="cropPrice"
-                step="0.01"
-                min="0.00"
-              ></b-form-input>
-            </b-input-group>
-          </b-form-group>
-        </b-card>
+  <div>
+    <b-jumbotron
+      header="MicroEssentials S10 Value Calculator"
+      lead="Built with Bootstrap v4 Components for Vue.js 2"
+    >
+    </b-jumbotron>
+    <div class="main row">
+      <div class="col-sm-6 left-col">
+        <b-form>
+          <b-card bg-variant="light">
+            <b-form-group label="Select Crop">
+              <b-form-select @change="setCrop" :options="getCrops">
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Select --</b-form-select-option
+                  >
+                </template>
+              </b-form-select>
+            </b-form-group>
+          </b-card>
 
-        <b-card bg-variant="light">
-          <b-form-group label="Current Blend">
-            <b-form-select v-model="currentBlend" :options="getFertilizers">
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Select --</b-form-select-option
-                >
-              </template>
-            </b-form-select>
-          </b-form-group>
-        </b-card>
-
-        <b-card bg-variant="light">
-          <b-form-group label="Do you Balance for Nitrogen?">
-            <b-form-checkbox v-model="useUrea"> </b-form-checkbox>
-          </b-form-group>
-        </b-card>
-
-        <b-card bg-variant="light">
-          <b-form-group label="Include Sulfur in the blend?">
-            <b-form-checkbox v-model="includeSulfurInBlend"> </b-form-checkbox>
-          </b-form-group>
-          <b-form-group
-            label="Select Sulfur Source"
-            v-if="includeSulfurInBlend"
-          >
-            <b-form-select v-model="sulfur" :options="getSulfurs">
-              <template #first>
-                <b-form-select-option :value="null" disabled
-                  >-- Select --</b-form-select-option
-                >
-              </template>
-            </b-form-select>
-          </b-form-group>
-        </b-card>
-
-        <b-card bg-variant="light">
-          <b-form-group label="Blend Rate of P2O5">
-            <b-input-group append="LB/Acre">
-              <b-form-input
-                type="number"
-                v-model="phosphorousOxide"
-                step="0.01"
-                min="0.00"
-              ></b-form-input>
-            </b-input-group>
-          </b-form-group>
-        </b-card>
-
-        <b-card bg-variant="light">
-          <b-form-group label="Expected Yield Advantage">
-            <b-input-group append="BU/Acre">
-              <b-form-input
-                type="number"
-                v-model="yieldAdvantage"
-                step="0.01"
-                min="0.00"
-              ></b-form-input>
-            </b-input-group>
-          </b-form-group>
-        </b-card>
-
-        <b-card bg-variant="light">
-          <b-form-group label="Local Retail Prices" label-size="lg">
-            <b-form-group label="MicroEssentials">
-              <b-input-group prepend="$" append="/ Short Ton">
+          <b-card bg-variant="light">
+            <b-form-group label="Crop Price">
+              <b-input-group prepend="$">
                 <b-form-input
                   type="number"
-                  v-model="microEssentialsPricePerTon"
+                  v-model="cropPrice"
                   step="0.01"
                   min="0.00"
                 ></b-form-input>
               </b-input-group>
             </b-form-group>
-            <b-form-group label="DAP">
-              <b-input-group prepend="$" append="/ Short Ton">
+          </b-card>
+
+          <b-card bg-variant="light">
+            <b-form-group label="Current Blend">
+              <b-form-select v-model="currentBlend" :options="getFertilizers">
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Select --</b-form-select-option
+                  >
+                </template>
+              </b-form-select>
+            </b-form-group>
+          </b-card>
+
+          <b-card bg-variant="light">
+            <b-form-group label="Do you Balance for Nitrogen?">
+              <b-form-checkbox v-model="useUrea"> </b-form-checkbox>
+            </b-form-group>
+          </b-card>
+
+          <b-card bg-variant="light">
+            <b-form-group label="Include Sulfur in the blend?">
+              <b-form-checkbox v-model="includeSulfurInBlend">
+              </b-form-checkbox>
+            </b-form-group>
+            <b-form-group
+              label="Select Sulfur Source"
+              v-if="includeSulfurInBlend"
+            >
+              <b-form-select v-model="sulfur" :options="getSulfurs">
+                <template #first>
+                  <b-form-select-option :value="null" disabled
+                    >-- Select --</b-form-select-option
+                  >
+                </template>
+              </b-form-select>
+            </b-form-group>
+          </b-card>
+
+          <b-card bg-variant="light">
+            <b-form-group label="Blend Rate of P2O5">
+              <b-input-group append="LB/Acre">
                 <b-form-input
                   type="number"
-                  v-model="dapPricePerTon"
+                  v-model="phosphorousOxide"
                   step="0.01"
                   min="0.00"
                 ></b-form-input>
               </b-input-group>
             </b-form-group>
-            <b-form-group label="MAP">
-              <b-input-group prepend="$" append="/ Short Ton">
+          </b-card>
+
+          <b-card bg-variant="light">
+            <b-form-group label="Expected Yield Advantage">
+              <b-input-group append="BU/Acre">
                 <b-form-input
                   type="number"
-                  v-model="mapPricePerTon"
+                  v-model="yieldAdvantage"
                   step="0.01"
                   min="0.00"
                 ></b-form-input>
               </b-input-group>
             </b-form-group>
-            <b-form-group label="Urea" v-if="useUrea">
-              <b-input-group prepend="$" append="/ Short Ton">
-                <b-form-input
-                  type="number"
-                  v-model="ureaPricePerTon"
-                  step="0.01"
-                  min="0.00"
-                ></b-form-input>
-              </b-input-group>
+          </b-card>
+
+          <b-card bg-variant="light">
+            <b-form-group label="Local Retail Prices" label-size="lg">
+              <b-form-group label="MicroEssentials">
+                <b-input-group prepend="$" append="/ Short Ton">
+                  <b-form-input
+                    type="number"
+                    v-model="microEssentialsPricePerTon"
+                    step="0.01"
+                    min="0.00"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group label="DAP">
+                <b-input-group prepend="$" append="/ Short Ton">
+                  <b-form-input
+                    type="number"
+                    v-model="dapPricePerTon"
+                    step="0.01"
+                    min="0.00"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group label="MAP">
+                <b-input-group prepend="$" append="/ Short Ton">
+                  <b-form-input
+                    type="number"
+                    v-model="mapPricePerTon"
+                    step="0.01"
+                    min="0.00"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group label="Urea" v-if="useUrea">
+                <b-input-group prepend="$" append="/ Short Ton">
+                  <b-form-input
+                    type="number"
+                    v-model="ureaPricePerTon"
+                    step="0.01"
+                    min="0.00"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group label="Ammonium Sulfate (AMS) / Short Ton">
+                <b-input-group prepend="$" append="/ Short Ton">
+                  <b-form-input
+                    type="number"
+                    v-model="amsPricePerTon"
+                    step="0.01"
+                    min="0.00"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
+              <b-form-group label="Elemental Sulfur (0-0-0-90S)">
+                <b-input-group prepend="$" append="/ Short Ton">
+                  <b-form-input
+                    type="number"
+                    v-model="esPricePerTon"
+                    step="0.01"
+                    min="0.00"
+                  ></b-form-input>
+                </b-input-group>
+              </b-form-group>
             </b-form-group>
-            <b-form-group label="Ammonium Sulfate (AMS) / Short Ton">
-              <b-input-group prepend="$" append="/ Short Ton">
-                <b-form-input
-                  type="number"
-                  v-model="amsPricePerTon"
-                  step="0.01"
-                  min="0.00"
-                ></b-form-input>
-              </b-input-group>
-            </b-form-group>
-            <b-form-group label="Elemental Sulfur (0-0-0-90S)">
-              <b-input-group prepend="$" append="/ Short Ton">
-                <b-form-input
-                  type="number"
-                  v-model="esPricePerTon"
-                  step="0.01"
-                  min="0.00"
-                ></b-form-input>
-              </b-input-group>
-            </b-form-group>
-          </b-form-group>
-        </b-card>
-      </b-form>
-    </div>
-    <div class="col-sm-6 right-col">
-      <h2>Net Return Per Acre</h2>
-      <h3>${{ getNetReturnPerAcre }}</h3>
+          </b-card>
+        </b-form>
+      </div>
+      <div class="col-sm-6 right-col">
+        <h2>Net Return Per Acre</h2>
+        <h3>${{ getNetReturnPerAcre }}</h3>
+      </div>
     </div>
   </div>
 </template>
@@ -156,6 +176,7 @@ import Logo from "~/components/Logo";
 import { FERTILIZERS } from "~/enums/fertilizers";
 import { SULFURS } from "~/enums/sulfurs";
 import { NITROGENS } from "~/enums/nitrogens";
+import { CROPS } from "~/enums/crops";
 
 export default {
   components: {
@@ -188,6 +209,11 @@ export default {
           (this.getCostPerAcreForMicroEssentials - this.getCostPerAcreForSulfur)
         ).toFixed(2);
       }
+    },
+    getCrops() {
+      return CROPS.map(crop => {
+        return { value: crop, text: crop.name };
+      });
     },
     getFertilizers() {
       return FERTILIZERS.filter(fertilizer => fertilizer.compare).map(
@@ -443,6 +469,14 @@ export default {
         }
 
         return 0;
+      }
+    }
+  },
+  methods: {
+    setCrop(crop) {
+      if (crop) {
+        this.yieldAdvantage = crop.yieldAdvantage;
+        this.cropPrice = crop.currentPrice;
       }
     }
   }
