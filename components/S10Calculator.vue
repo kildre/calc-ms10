@@ -99,7 +99,7 @@
           <b-card bg-variant="light">
             <b-form-group label="Local Retail Prices" label-size="lg">
               <b-form-group label="MicroEssentials">
-                <b-input-group prepend="$" append="/ Short Ton">
+                <b-input-group prepend="$" append="/ Ton">
                   <b-form-input
                     type="number"
                     v-model="microEssentialsPricePerTon"
@@ -109,7 +109,7 @@
                 </b-input-group>
               </b-form-group>
               <b-form-group label="DAP">
-                <b-input-group prepend="$" append="/ Short Ton">
+                <b-input-group prepend="$" append="/ Ton">
                   <b-form-input
                     type="number"
                     v-model="dapPricePerTon"
@@ -119,7 +119,7 @@
                 </b-input-group>
               </b-form-group>
               <b-form-group label="MAP">
-                <b-input-group prepend="$" append="/ Short Ton">
+                <b-input-group prepend="$" append="/ Ton">
                   <b-form-input
                     type="number"
                     v-model="mapPricePerTon"
@@ -129,7 +129,7 @@
                 </b-input-group>
               </b-form-group>
               <b-form-group label="Urea" v-if="useUrea">
-                <b-input-group prepend="$" append="/ Short Ton">
+                <b-input-group prepend="$" append="/ Ton">
                   <b-form-input
                     type="number"
                     v-model="ureaPricePerTon"
@@ -138,8 +138,8 @@
                   ></b-form-input>
                 </b-input-group>
               </b-form-group>
-              <b-form-group label="Ammonium Sulfate (AMS) / Short Ton">
-                <b-input-group prepend="$" append="/ Short Ton">
+              <b-form-group label="Ammonium Sulfate (AMS) / Ton">
+                <b-input-group prepend="$" append="/ Ton">
                   <b-form-input
                     type="number"
                     v-model="amsPricePerTon"
@@ -149,7 +149,7 @@
                 </b-input-group>
               </b-form-group>
               <b-form-group label="Elemental Sulfur (0-0-0-90S)">
-                <b-input-group prepend="$" append="/ Short Ton">
+                <b-input-group prepend="$" append="/ Ton">
                   <b-form-input
                     type="number"
                     v-model="esPricePerTon"
@@ -173,10 +173,8 @@
 <script>
 import Logo from "~/components/Logo";
 
-import { FERTILIZERS } from "~/enums/fertilizers";
-import { SULFURS } from "~/enums/sulfurs";
-import { NITROGENS } from "~/enums/nitrogens";
 import { CROPS } from "~/enums/crops";
+import { PRODUCTS } from "~/enums/products";
 
 export default {
   components: {
@@ -216,31 +214,33 @@ export default {
       });
     },
     getFertilizers() {
-      return FERTILIZERS.filter(fertilizer => fertilizer.compare).map(
-        fertilizer => {
+      return PRODUCTS.fertilizers
+        .filter(fertilizer => fertilizer.compare)
+        .map(fertilizer => {
           return { value: fertilizer, text: fertilizer.name };
-        }
-      );
+        });
     },
     getSulfurs() {
-      return SULFURS.map(sulfur => {
+      return PRODUCTS.sulfurs.map(sulfur => {
         return { value: sulfur, text: sulfur.name };
       });
     },
     getAms() {
-      return SULFURS.find(sulfur => sulfur.name == "AMS");
+      return PRODUCTS.sulfurs.find(sulfur => sulfur.name == "AMS");
     },
     getElementalSulfur() {
-      return SULFURS.find(sulfur => sulfur.name == "Elemental Sulfur 90%");
+      return PRODUCTS.sulfurs.find(
+        sulfur => sulfur.name == "Elemental Sulfur 90%"
+      );
     },
     getDap() {
-      return FERTILIZERS.find(fertilizer => fertilizer.name == "DAP");
+      return PRODUCTS.fertilizers.find(fertilizer => fertilizer.name == "DAP");
     },
     getMap() {
-      return FERTILIZERS.find(fertilizer => fertilizer.name == "MAP");
+      return PRODUCTS.fertilizers.find(fertilizer => fertilizer.name == "MAP");
     },
     getMicroEssentials() {
-      return FERTILIZERS.find(
+      return PRODUCTS.fertilizers.find(
         fertilizer => fertilizer.name == "MicroEssentials S10"
       );
     },
@@ -271,7 +271,7 @@ export default {
       return 0;
     },
     getUrea() {
-      return NITROGENS.find(nitrogen => nitrogen.name == "Urea");
+      return PRODUCTS.nitrogens.find(nitrogen => nitrogen.name == "Urea");
     },
     getUreaCostForMicroEssentials() {
       if (!this.useUrea) {
